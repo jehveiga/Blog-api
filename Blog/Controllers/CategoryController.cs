@@ -3,10 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Blog.Controllers
 {
+    [ApiController]
     public class CategoryController : ControllerBase
     {
         // Adicionando end-points usando a nomeclatura API Rest
-        [HttpGet("categories")]
+        [HttpGet("v1/categories")] // localhost:PORT/v1/categories
         public IActionResult Get(
             [FromServices] BlogDataContext context)
         {
