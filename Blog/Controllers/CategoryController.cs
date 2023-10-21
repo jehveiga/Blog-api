@@ -1,5 +1,6 @@
 ﻿using Blog.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Blog.Controllers
 {
@@ -8,10 +9,10 @@ namespace Blog.Controllers
     {
         // Adicionando end-points usando a nomeclatura API Rest
         [HttpGet("v1/categories")] // localhost:PORT/v1/categories
-        public IActionResult Get(
+        public async Task<IActionResult> GetAsync(
             [FromServices] BlogDataContext context)
         {
-            var categories = context.Categories.ToList();
+            var categories = await context.Categories.ToListAsync();
             return Ok(categories);
         }
     }
