@@ -13,8 +13,16 @@ namespace Blog.Controllers
         public async Task<IActionResult> GetAsync(
                 [FromServices] BlogDataContext context)
         {
-            var categories = await context.Categories.ToListAsync();
-            return Ok(categories);
+            try
+            {
+                var categories = await context.Categories.ToListAsync();
+                return Ok(categories);
+            }
+            catch (Exception)
+            {
+                // código do início identifica o erro no caso criado na regra de negócio do projeto para identificaçào encontrar onde foi o erro mais facilmente
+                return StatusCode(500, "05X04 - Falha interna no servidor");
+            }
         }
 
         [HttpGet("v1/categories/{id:int}")] // localhost:PORT/v1/categories/id - id parametro a ser procurado
@@ -22,12 +30,20 @@ namespace Blog.Controllers
                 [FromRoute] int id,
                 [FromServices] BlogDataContext context)
         {
-            var category = await context.Categories.FirstOrDefaultAsync(category => category.Id == id);
+            try
+            {
+                var category = await context.Categories.FirstOrDefaultAsync(category => category.Id == id);
 
-            if (category is null)
-                return NotFound();
+                if (category is null)
+                    return NotFound();
 
-            return Ok(category);
+                return Ok(category);
+            }
+            catch (Exception)
+            {
+                // código do início identifica o erro no caso criado na regra de negócio do projeto para identificaçào encontrar onde foi o erro mais facilmente
+                return StatusCode(500, "05X05 - Falha interna no servidor");
+            }
         }
 
         [HttpPost("v1/categories")] // localhost:PORT/v1/categories/
@@ -35,10 +51,24 @@ namespace Blog.Controllers
                 [FromBody] Category category,
                 [FromServices] BlogDataContext context)
         {
-            await context.Categories.AddAsync(category);
-            await context.SaveChangesAsync();
+            try
+            {
+                await context.Categories.AddAsync(category);
+                await context.SaveChangesAsync();
 
-            return Created($"v1/categories/{category.Id}", category); // direcionando para URL referida passando o objeto criado
+                return Created($"v1/categories/{category.Id}", category); // direcionando para URL referida passando o objeto criado
+            }
+            catch (DbUpdateException)
+            {
+                // código do início identifica o erro no caso criado na regra de negócio do projeto para identificaçào encontrar onde foi o erro mais facilmente
+                return StatusCode(500, "05XE9 - Não foi possível incluir a categoria"); 
+            }
+            catch (Exception)
+            {
+                // código do início identifica o erro no caso criado na regra de negócio do projeto para identificaçào encontrar onde foi o erro mais facilmente
+                return StatusCode(500, "05X10 - Falha interna no servidor");
+            }
+
         }
 
         [HttpPut("v1/categories/{id:int}")] // localhost:PORT/v1/categories/id - id parametro a ser alterado
@@ -47,18 +77,32 @@ namespace Blog.Controllers
                 [FromBody] Category categoryModel,
                 [FromServices] BlogDataContext context)
         {
-            var categoryDatabase = await context.Categories.FirstOrDefaultAsync(categoryModel => categoryModel.Id == id);
 
-            if (categoryDatabase is null)
-                return NotFound();
+            try
+            {
+                var categoryDatabase = await context.Categories.FirstOrDefaultAsync(categoryModel => categoryModel.Id == id);
 
-            categoryDatabase.Name = categoryModel.Name;
-            categoryDatabase.Slug = categoryModel.Slug;
+                if (categoryDatabase is null)
+                    return NotFound();
 
-            context.Categories.Update(categoryDatabase);
-            await context.SaveChangesAsync();
+                categoryDatabase.Name = categoryModel.Name;
+                categoryDatabase.Slug = categoryModel.Slug;
 
-            return Ok(categoryModel);
+                context.Categories.Update(categoryDatabase);
+                await context.SaveChangesAsync();
+
+                return Ok(categoryModel);
+            }
+            catch (DbUpdateException)
+            {
+                // código do início identifica o erro no caso criado na regra de negócio do projeto para identificaçào encontrar onde foi o erro mais facilmente
+                return StatusCode(500, "05XE8 - Não foi possível alterar a categoria");
+            }
+            catch (Exception)
+            {
+                // código do início identifica o erro no caso criado na regra de negócio do projeto para identificaçào encontrar onde foi o erro mais facilmente
+                return StatusCode(500, "05X11 - Falha interna no servidor");
+            }
 
         }
 
@@ -67,15 +111,28 @@ namespace Blog.Controllers
                 [FromRoute] int id,
                 [FromServices] BlogDataContext context)
         {
-            var categoryDatabase = await context.Categories.FirstOrDefaultAsync(categoryModel => categoryModel.Id == id);
+            try
+            {
+                var categoryDatabase = await context.Categories.FirstOrDefaultAsync(categoryModel => categoryModel.Id == id);
 
-            if (categoryDatabase is null)
-                return NotFound();
+                if (categoryDatabase is null)
+                    return NotFound();
 
-            context.Categories.Remove(categoryDatabase);
-            await context.SaveChangesAsync();
+                context.Categories.Remove(categoryDatabase);
+                await context.SaveChangesAsync();
 
-            return Ok(categoryDatabase);
+                return Ok(categoryDatabase);
+            }
+            catch (DbUpdateException)
+            {
+                // código do início identifica o erro no caso criado na regra de negócio do projeto para identificaçào encontrar onde foi o erro mais facilmente
+                return StatusCode(500, "05XE7 - Não foi possível excluir a categoria");
+            }
+            catch (Exception)
+            {
+                // código do início identifica o erro no caso criado na regra de negócio do projeto para identificaçào encontrar onde foi o erro mais facilmente
+                return StatusCode(500, "05X12 - Falha interna no servidor");
+            }
 
         }
     }
