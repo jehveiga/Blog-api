@@ -11,7 +11,7 @@ namespace Blog.Controllers
         // Adicionando end-points usando a nomeclatura API Rest
         [HttpGet("v1/categories")] // localhost:PORT/v1/categories
         public async Task<IActionResult> GetAsync(
-            [FromServices] BlogDataContext context)
+                [FromServices] BlogDataContext context)
         {
             var categories = await context.Categories.ToListAsync();
             return Ok(categories);
@@ -19,8 +19,8 @@ namespace Blog.Controllers
 
         [HttpGet("v1/categories/{id:int}")] // localhost:PORT/v1/categories/id - id parametro a ser procurado
         public async Task<IActionResult> GetByIdAsync(
-            [FromRoute] int id,
-            [FromServices] BlogDataContext context)
+                [FromRoute] int id,
+                [FromServices] BlogDataContext context)
         {
             var category = await context.Categories.FirstOrDefaultAsync(category => category.Id == id);
 
@@ -41,11 +41,11 @@ namespace Blog.Controllers
             return Created($"v1/categories/{category.Id}", category); // direcionando para URL referida passando o objeto criado
         }
 
-        [HttpPut("v1/categories/{id:int}")] // localhost:PORT/v1/categories/
+        [HttpPut("v1/categories/{id:int}")] // localhost:PORT/v1/categories/id - id parametro a ser alterado
         public async Task<IActionResult> PutAsync(
-        [FromRoute] int id,
-        [FromBody] Category categoryModel,
-        [FromServices] BlogDataContext context)
+                [FromRoute] int id,
+                [FromBody] Category categoryModel,
+                [FromServices] BlogDataContext context)
         {
             var categoryDatabase = await context.Categories.FirstOrDefaultAsync(categoryModel => categoryModel.Id == id);
 
@@ -58,7 +58,24 @@ namespace Blog.Controllers
             context.Categories.Update(categoryDatabase);
             await context.SaveChangesAsync();
 
-            return Created($"v1/categories/{categoryModel.Id}", categoryModel); // direcionando para URL referida passando o objeto alterado
+            return Ok(categoryModel);
+
+        }
+
+        [HttpDelete("v1/categories/{id:int}")] // localhost:PORT/v1/categories/id - id parametro a ser removido
+        public async Task<IActionResult> DeleteAsync(
+                [FromRoute] int id,
+                [FromServices] BlogDataContext context)
+        {
+            var categoryDatabase = await context.Categories.FirstOrDefaultAsync(categoryModel => categoryModel.Id == id);
+
+            if (categoryDatabase is null)
+                return NotFound();
+
+            context.Categories.Remove(categoryDatabase);
+            await context.SaveChangesAsync();
+
+            return Ok(categoryDatabase);
 
         }
     }
