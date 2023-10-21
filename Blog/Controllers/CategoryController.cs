@@ -40,5 +40,26 @@ namespace Blog.Controllers
 
             return Created($"v1/categories/{category.Id}", category); // direcionando para URL referida passando o objeto criado
         }
+
+        [HttpPut("v1/categories/{id:int}")] // localhost:PORT/v1/categories/
+        public async Task<IActionResult> PutAsync(
+        [FromRoute] int id,
+        [FromBody] Category categoryModel,
+        [FromServices] BlogDataContext context)
+        {
+            var categoryDatabase = await context.Categories.FirstOrDefaultAsync(categoryModel => categoryModel.Id == id);
+
+            if (categoryDatabase is null)
+                return NotFound();
+
+            categoryDatabase.Name = categoryModel.Name;
+            categoryDatabase.Slug = categoryModel.Slug;
+
+            context.Categories.Update(categoryDatabase);
+            await context.SaveChangesAsync();
+
+            return Created($"v1/categories/{categoryModel.Id}", categoryModel); // direcionando para URL referida passando o objeto alterado
+
+        }
     }
 }
