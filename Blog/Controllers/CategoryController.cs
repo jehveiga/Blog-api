@@ -15,5 +15,18 @@ namespace Blog.Controllers
             var categories = await context.Categories.ToListAsync();
             return Ok(categories);
         }
+
+        [HttpGet("v1/categories{id:int}")] // localhost:PORT/v1/categories/id - id parametro a ser procurado
+        public async Task<IActionResult> GetByIdAsync(
+            [FromRoute] int id,
+            [FromServices] BlogDataContext context)
+        {
+            var category = await context.Categories.FirstOrDefaultAsync(category => category.Id == id);
+
+            if (category is null)
+                return NotFound();
+
+            return Ok(category);
+        }
     }
 }
