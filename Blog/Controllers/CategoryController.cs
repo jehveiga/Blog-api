@@ -1,5 +1,6 @@
 ﻿using Blog.Data;
 using Blog.Models;
+using Blog.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -48,20 +49,27 @@ namespace Blog.Controllers
 
         [HttpPost("v1/categories")] // localhost:PORT/v1/categories/
         public async Task<IActionResult> PostAsync(
-                [FromBody] Category category,
+                [FromBody] EditorCategoryViewModel categoryViewModel,
                 [FromServices] BlogDataContext context)
         {
             try
             {
+                var category = new Category
+                {
+                    Id = 0,
+                    Name = categoryViewModel.Name,
+                    Slug = categoryViewModel.Slug.ToLower()
+                };
+
                 await context.Categories.AddAsync(category);
                 await context.SaveChangesAsync();
 
-                return Created($"v1/categories/{category.Id}", category); // direcionando para URL referida passando o objeto criado
+                return Created($"v1/categories/{category.Id}", categoryViewModel); // direcionando para URL referida passando o objeto criado
             }
             catch (DbUpdateException)
             {
                 // código do início identifica o erro no caso criado na regra de negócio do projeto para identificaçào encontrar onde foi o erro mais facilmente
-                return StatusCode(500, "05XE9 - Não foi possível incluir a categoria"); 
+                return StatusCode(500, "05XE9 - Não foi possível incluir a categoria");
             }
             catch (Exception)
             {
@@ -74,7 +82,7 @@ namespace Blog.Controllers
         [HttpPut("v1/categories/{id:int}")] // localhost:PORT/v1/categories/id - id parametro a ser alterado
         public async Task<IActionResult> PutAsync(
                 [FromRoute] int id,
-                [FromBody] Category categoryModel,
+                [FromBody] EditorCategoryViewModel categoryViewModel,
                 [FromServices] BlogDataContext context)
         {
 
@@ -85,13 +93,13 @@ namespace Blog.Controllers
                 if (categoryDatabase is null)
                     return NotFound();
 
-                categoryDatabase.Name = categoryModel.Name;
-                categoryDatabase.Slug = categoryModel.Slug;
+                categoryDatabase.Name = categoryViewModel.Name;
+                categoryDatabase.Slug = categoryViewModel.Slug;
 
                 context.Categories.Update(categoryDatabase);
                 await context.SaveChangesAsync();
 
-                return Ok(categoryModel);
+                return Ok(categoryViewModel);
             }
             catch (DbUpdateException)
             {
