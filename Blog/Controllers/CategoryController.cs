@@ -1,4 +1,5 @@
 ﻿using Blog.Data;
+using Blog.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,7 +17,7 @@ namespace Blog.Controllers
             return Ok(categories);
         }
 
-        [HttpGet("v1/categories{id:int}")] // localhost:PORT/v1/categories/id - id parametro a ser procurado
+        [HttpGet("v1/categories/{id:int}")] // localhost:PORT/v1/categories/id - id parametro a ser procurado
         public async Task<IActionResult> GetByIdAsync(
             [FromRoute] int id,
             [FromServices] BlogDataContext context)
@@ -27,6 +28,17 @@ namespace Blog.Controllers
                 return NotFound();
 
             return Ok(category);
+        }
+
+        [HttpPost("v1/categories")] // localhost:PORT/v1/categories/
+        public async Task<IActionResult> PostAsync(
+                [FromBody] Category category,
+                [FromServices] BlogDataContext context)
+        {
+            await context.Categories.AddAsync(category);
+            await context.SaveChangesAsync();
+
+            return Created($"v1/categories/{category.Id}", category); // direcionando para URL referida passando o objeto criado
         }
     }
 }
