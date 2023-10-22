@@ -4,7 +4,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services
+       .AddControllers()
+       .ConfigureApiBehaviorOptions(options =>
+       {
+           options.SuppressModelStateInvalidFilter = true; // Definir que o comportamento de validação dos modelos das requições não será feito automático pelos Asp.Net
+       });
+
 builder.Services.AddDbContext<BlogDataContext>();
 
 builder.Services.AddEndpointsApiExplorer();

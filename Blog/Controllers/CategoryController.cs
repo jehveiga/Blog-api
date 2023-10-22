@@ -17,12 +17,12 @@ namespace Blog.Controllers
             try
             {
                 var categories = await context.Categories.ToListAsync();
-                return Ok(categories);
+                return Ok(new ResultViewModel<List<Category>>(categories));
             }
-            catch (Exception)
+            catch
             {
                 // código do início identifica o erro no caso criado na regra de negócio do projeto para identificaçào encontrar onde foi o erro mais facilmente
-                return StatusCode(500, "05X04 - Falha interna no servidor");
+                return StatusCode(500, new ResultViewModel<List<Category>>("05X04 - Falha interna no servidor"));
             }
         }
 
@@ -52,7 +52,8 @@ namespace Blog.Controllers
                 [FromBody] EditorCategoryViewModel categoryViewModel,
                 [FromServices] BlogDataContext context)
         {
-            if(!ModelState.IsValid)
+            // Manipulando a validação do ModelState
+            if (!ModelState.IsValid)
                 return BadRequest();
 
             try

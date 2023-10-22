@@ -11,7 +11,7 @@ namespace Blog.Data
         public DbSet<User> Users { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-            => optionsBuilder.UseSqlServer("Server=localhost, 1433;Database=Blog;Integrated Security=False;User ID=sa;Password=1q2w3e4r@#$;Connect Timeout=15;Encrypt=False;MultipleActiveResultSets=True;TrustServerCertificate=False");
+            => optionsBuilder.UseSqlServer("Server=localhost, 1433;Database=Blog;Integrated Security=False;User ID=sa;Password=1q2w3e4r@#$;Connect Timeout=10;Encrypt=False;MultipleActiveResultSets=True;TrustServerCertificate=False");
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
