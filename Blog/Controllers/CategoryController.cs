@@ -36,14 +36,14 @@ namespace Blog.Controllers
                 var category = await context.Categories.FirstOrDefaultAsync(category => category.Id == id);
 
                 if (category is null)
-                    return NotFound();
+                    return NotFound(new ResultViewModel<Category>("Conteúdo não encontrado"));
 
-                return Ok(category);
+                return Ok(new ResultViewModel<Category>(category));
             }
-            catch (Exception)
+            catch
             {
                 // código do início identifica o erro no caso criado na regra de negócio do projeto para identificaçào encontrar onde foi o erro mais facilmente
-                return StatusCode(500, "05X05 - Falha interna no servidor");
+                return StatusCode(500, new ResultViewModel<Category>("05X05 - Falha interna no servidor"));
             }
         }
 
