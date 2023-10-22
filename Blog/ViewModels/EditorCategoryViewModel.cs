@@ -2,7 +2,7 @@
 
 namespace Blog.ViewModels
 {
-    // Classe para ser usada para tranferência de dados entre o modelo que chega da requisição e também o modelo de resposta da controllers
+    // Classe para ser usada para tranferência de dados para ser o modelo que chega da requisição e transferir os dados para modelo alvo persistido no banco
     public class EditorCategoryViewModel
     {
         [Required(ErrorMessage = "O nome é obrigatório")]
