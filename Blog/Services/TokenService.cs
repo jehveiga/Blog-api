@@ -1,6 +1,7 @@
 ﻿using Blog.Models;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text;
 
 namespace Blog.Services
@@ -15,6 +16,12 @@ namespace Blog.Services
 
             var tokenDescriptor = new SecurityTokenDescriptor // Objeto que ficará todos as informações vinculado ao token
             {
+                Subject = new ClaimsIdentity(new Claim[] // Criando as claims que serão usadas para validar o usuário 
+                {
+                    new (ClaimTypes.Name, "testetestado"), // User.Identity.Name
+                    new (ClaimTypes.Role, "admin"), // User.IsInRole
+                    new ("fruta" , "banana")
+                }),
                 Expires = DateTime.UtcNow.AddHours(8),
                 SigningCredentials = new SigningCredentials( // Criará o token encriptado passando a chave e o algoritmo que será usado
                     new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
