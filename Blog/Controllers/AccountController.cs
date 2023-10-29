@@ -32,6 +32,8 @@ public class AccountController : ControllerBase
             Slug = model.Email.Replace("@", "-").Replace(".", "-")
         };
 
+
+
         return Ok();
     }
 
