@@ -4,6 +4,8 @@ using Blog.Models;
 using Blog.Services;
 using Blog.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using SecureIdentity.Password;
 
 namespace Blog.Controllers;
 
@@ -32,18 +34,65 @@ public class AccountController : ControllerBase
             Slug = model.Email.Replace("@", "-").Replace(".", "-")
         };
 
+        var password = PasswordGenerator.Generate(25); // Gerar senha através da biblioteca SecureIdentity
+        user.PasswordHash = PasswordHasher.Hash(password); // Gerando um novo hash usando a senha passada por parametro
 
+        try
+        {
+            await context.Users.AddAsync(user);
+            await context.SaveChangesAsync();
 
-        return Ok();
+            return Ok(new ResultViewModel<dynamic>(new
+            {
+                user = user.Email,
+                password // O password em aplicações reais o ideal seria enviar por email.
+            }));
+        }
+        catch (DbUpdateException)
+        {
+            return StatusCode(400, new ResultViewModel<string>("O5X99 - Este E-mail já está cadastrado"));
+        }
+        catch
+        {
+            return StatusCode(500, new ResultViewModel<string>("05X04 - Falha interna no servidor"));
+        }
     }
 
 
     [HttpPost("v1/accounts/login")]
-    public IActionResult Login([FromServices] TokenService tokenService) // injeção de dependência do TokenService
+    public async Task<IActionResult> Login(
+        [FromBody] LoginViewModel model, // no model virá uma senha sem o hash que está no banco
+        [FromServices] BlogDataContext context,
+        [FromServices] TokenService tokenService) // injeção de dependência do TokenService
     {
-        var token = tokenService.GenerateToken(null);
+        if (!ModelState.IsValid)
+            return BadRequest(new ResultViewModel<string>(ModelState.GetErrors()));
 
-        return Ok(token);
+        var user = await context.Users // a senha do usuário que virá pelo banco, estará com hash conforme a regra de negócios adotada
+                                .AsNoTracking()
+                                .Include(user => user.Roles)
+                                .FirstOrDefaultAsync(user => user.Email == model.Email);
+
+        if (user == null)
+            return StatusCode(401, new ResultViewModel<string>("Usuário ou senha inválido"));
+
+        // Método que verificará se o hash coincide com password passado no modelo pelo que está no banco
+        // Internamente realizará a extração do hash para comparar o passwords
+        if (!PasswordHasher.Verify(user.PasswordHash, model.Password))
+            return StatusCode(401, new ResultViewModel<string>("Usuário ou senha inválido"));
+
+        // Se passar pela verificação do password irá efetuar a geração do token para autenticação da aplicação
+        try
+        {
+            var token = tokenService.GenerateToken(user);
+            return Ok(new ResultViewModel<string>(token, null));
+        }
+        catch
+        {
+
+            return StatusCode(500, new ResultViewModel<string>("05X04 - Falha interna no servidor"));
+        }
+
     }
 
 }
