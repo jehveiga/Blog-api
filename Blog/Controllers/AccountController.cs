@@ -1,4 +1,5 @@
 ﻿using Blog.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Blog.Controllers;
@@ -21,5 +22,18 @@ public class AccountController : ControllerBase
 
         return Ok(token);
     }
+
+    [Authorize(Roles = "admin")]
+    [Authorize(Roles = "user")] // Somente usuários que tiverem a regra informada pode acessar o método direcionado abaixo
+    [HttpGet("v1/user")]
+    public IActionResult GetUser() => Ok(User.Identity.Name);
+
+    [Authorize(Roles = "author")] // Somente usuários que tiverem a regra informada pode acessar o método direcionado abaixo
+    [HttpGet("v1/author")]
+    public IActionResult GetAuthor() => Ok(User.Identity.Name);
+
+    [Authorize(Roles = "admin")] // Somente usuários que tiverem a regra informada pode acessar o método direcionado abaixo
+    [HttpGet("v1/admin")]
+    public IActionResult GetAdmin() => Ok(User.Identity.Name);
 }
 

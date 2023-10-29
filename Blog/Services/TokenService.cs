@@ -19,6 +19,7 @@ namespace Blog.Services
                 Subject = new ClaimsIdentity(new Claim[] // Criando as claims que serão usadas para validar o usuário 
                 {
                     new (ClaimTypes.Name, "testetestado"), // User.Identity.Name
+                    new (ClaimTypes.Role, "user"), // User.IsInRole
                     new (ClaimTypes.Role, "admin"), // User.IsInRole
                     new ("fruta" , "banana")
                 }),
