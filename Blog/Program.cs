@@ -85,4 +85,5 @@ void ConfigureServices(WebApplicationBuilder builder)
 {
     builder.Services.AddDbContext<BlogDataContext>(); // adicionando o serviço de injeção de dependência do Contexto que representará o banco na aplicação
     builder.Services.AddTransient<TokenService>();
+    builder.Services.AddTransient<EmailService>();
 }
