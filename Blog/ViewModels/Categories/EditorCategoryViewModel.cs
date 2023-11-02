@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Blog.ViewModels
+namespace Blog.ViewModels.Categories
 {
     // Classe para ser usada para tranferência de dados para ser o modelo que chega da requisição e transferir os dados para modelo alvo persistido no banco
     public class EditorCategoryViewModel
