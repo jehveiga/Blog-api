@@ -4,6 +4,17 @@ using System.Net.Mail;
 namespace Blog.Services;
 public class EmailService
 {
+    /// <summary>
+    /// Tem que ter um serviço cadastrado em alguma empresa que disponha do serviço SMTP
+    /// tipo: Sengrid, SendinBlue, SendPulse, etc...
+    /// </summary>
+    /// <param name="toName"></param>
+    /// <param name="toEmail"></param>
+    /// <param name="subject"></param>
+    /// <param name="body"></param>
+    /// <param name="fromName"></param>
+    /// <param name="fromEmail"></param>
+    /// <returns></returns>
     public bool Send(
         string toName,
         string toEmail,
