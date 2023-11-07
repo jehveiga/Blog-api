@@ -4,6 +4,7 @@ using Blog.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -79,6 +80,13 @@ void ConfigureMvc(WebApplicationBuilder builder)
        .ConfigureApiBehaviorOptions(options =>
        {
            options.SuppressModelStateInvalidFilter = true; // Definir que o comportamento de validação dos modelos das requições não será feito automático pelos Asp.Net
+       })
+       .AddJsonOptions(jsonOptions =>
+       {
+           // Manipulador de referência para ser serializado, irá fazer ser ignorado os ciclos subsequentes do objeto só descendo ao primeiro nó do objeto requerido
+           jsonOptions.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+           // Quando houver um objeto nulo náo irá renderizar o objeto na tela
+           jsonOptions.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault;
        });
 }
 
