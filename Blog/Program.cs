@@ -75,7 +75,10 @@ void ConfigureAuthentication(WebApplicationBuilder builder)
 
 void ConfigureMvc(WebApplicationBuilder builder)
 {
-    builder.Services
+    builder.Services.AddMemoryCache(); // Adicionando suporte ao serviço de cache para aplicação
+
+    builder
+       .Services
        .AddControllers()
        .ConfigureApiBehaviorOptions(options =>
        {

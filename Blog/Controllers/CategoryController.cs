@@ -5,6 +5,7 @@ using Blog.ViewModels;
 using Blog.ViewModels.Categories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Blog.Controllers
 {
@@ -14,11 +15,19 @@ namespace Blog.Controllers
         // Adicionando end-points usando a nomeclatura API Rest
         [HttpGet("v1/categories")] // localhost:PORT/v1/categories
         public async Task<IActionResult> GetAsync(
+                [FromServices] IMemoryCache memoryCache,
                 [FromServices] BlogDataContext context)
         {
             try
             {
-                var categories = await context.Categories.ToListAsync();
+                // Tentará obter a listagem pelo cache em memoria se não houver irá criar o cache com a lista retornada do método
+                var categories = memoryCache.GetOrCreate("CategoriesCache", entry =>
+                {
+                    // Adicionando o tempo de expiração do cache da lista buscada
+                    entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1);
+                    return GetCategories(context);
+                });
+
                 return Ok(new ResultViewModel<List<Category>>(categories));
             }
             catch
@@ -26,6 +35,11 @@ namespace Blog.Controllers
                 // código do início identifica o erro no caso criado na regra de negócio do projeto para identificaçào encontrar onde foi o erro mais facilmente
                 return StatusCode(500, new ResultViewModel<List<Category>>("05X04 - Falha interna no servidor"));
             }
+        }
+
+        private List<Category> GetCategories(BlogDataContext context)
+        {
+            return context.Categories.ToList();
         }
 
         [HttpGet("v1/categories/{id:int}")] // localhost:PORT/v1/categories/id - id parametro a ser procurado
