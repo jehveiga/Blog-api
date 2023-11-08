@@ -21,14 +21,14 @@ namespace Blog.Controllers
             try
             {
                 // Tentará obter a listagem pelo cache em memoria se não houver irá criar o cache com a lista retornada do método
-                var categories = memoryCache.GetOrCreate("CategoriesCache", entry =>
+                var categories = memoryCache.GetOrCreate("CategoriesCache", async entry =>
                 {
                     // Adicionando o tempo de expiração do cache da lista buscada
                     entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1);
-                    return GetCategories(context);
+                    return await GetCategories(context);
                 });
 
-                return Ok(new ResultViewModel<List<Category>>(categories));
+                return Ok(new ResultViewModel<List<Category>>(await categories));
             }
             catch
             {
@@ -37,9 +37,9 @@ namespace Blog.Controllers
             }
         }
 
-        private List<Category> GetCategories(BlogDataContext context)
+        private async Task<List<Category>> GetCategories(BlogDataContext context)
         {
-            return context.Categories.ToList();
+            return await context.Categories.ToListAsync();
         }
 
         [HttpGet("v1/categories/{id:int}")] // localhost:PORT/v1/categories/id - id parametro a ser procurado
