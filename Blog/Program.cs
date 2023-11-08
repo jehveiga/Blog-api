@@ -2,7 +2,9 @@ using Blog;
 using Blog.Data;
 using Blog.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.IdentityModel.Tokens;
+using System.IO.Compression;
 using System.Text;
 using System.Text.Json.Serialization;
 
@@ -32,6 +34,10 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+// Adicionando a compressão ao pipeline da aplicação
+app.UseResponseCompression();
+
 app.UseStaticFiles();
 
 app.MapControllers();
@@ -76,6 +82,19 @@ void ConfigureAuthentication(WebApplicationBuilder builder)
 void ConfigureMvc(WebApplicationBuilder builder)
 {
     builder.Services.AddMemoryCache(); // Adicionando suporte ao serviço de cache para aplicação
+
+    // Adicionando o serviço de compressão de dados para o response
+    builder.Services.AddResponseCompression(options =>
+    {
+        //options.Providers.Add<BrotliCompressionProvider>(); (outro tipo de compressão)
+        options.Providers.Add<GzipCompressionProvider>();
+    });
+
+
+    builder.Services.Configure<GzipCompressionProviderOptions>(options =>
+    {
+        options.Level = CompressionLevel.Optimal; // Configurar o nivel de compressão escolhido
+    });
 
     builder
        .Services
