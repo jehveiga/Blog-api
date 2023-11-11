@@ -3,6 +3,7 @@ using Blog.Data;
 using Blog.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IO.Compression;
 using System.Text;
@@ -114,7 +115,10 @@ void ConfigureMvc(WebApplicationBuilder builder)
 
 void ConfigureServices(WebApplicationBuilder builder)
 {
-    builder.Services.AddDbContext<BlogDataContext>(); // adicionando o serviço de injeção de dependência do Contexto que representará o banco na aplicação
+    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection"); // Obter a connection string configuradas pelo nome configurado
+    builder.Services.AddDbContext<BlogDataContext>(options =>
+        options.UseSqlServer(connectionString)); // adicionando o serviço de injeção de dependência do Contexto que representará o banco na aplicação
+
     builder.Services.AddTransient<TokenService>();
     builder.Services.AddTransient<EmailService>();
 }
