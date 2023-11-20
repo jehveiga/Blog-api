@@ -21,9 +21,15 @@ jobs:
         with:
           dotnet-version: '7.x'
           include-prerelease: true
+          
+      - name: Install EF Tools
+        run: dotnet tool install --global dotnet-ef
 
       - name: Build with dotnet
         run: dotnet build --configuration Release
+        
+      - name: Execute migration
+        run: dotnet ef database update --project Blog
 
       - name: dotnet publish
         run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
