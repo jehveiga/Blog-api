@@ -9,10 +9,10 @@ namespace Blog.Extensions
         {
             var result = new List<Claim>
             {
-                new (ClaimTypes.Name, user.Email) // User.Identity.Name
+                new (ClaimTypes.Name, user.Email) // User.Identity.Name - Obtém o nome do usuário autenticado usando {"chave" : "valor"}
             };
 
-            result.AddRange(user.Roles.Select(role => new Claim(ClaimTypes.Role, role.Slug)));
+            result.AddRange(user.Roles.Select(role => new Claim(ClaimTypes.Role, role.Slug))); // User.IsInRole - Obtém a role do usuário autenticado usando {"chave" : "valor"}
 
             return result;
         }
