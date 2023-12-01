@@ -24,8 +24,8 @@ if (app.Environment.IsDevelopment()) // Habilitando as configurações do pipeline
 
 app.UseHttpsRedirection();
 
-app.UseAuthentication();
-app.UseAuthorization();
+app.UseAuthentication(); // Adicionar o Middleware de autenticação - Quem é?
+app.UseAuthorization(); // Adicionar o Middleware de autorização - Oque pode fazer? Onde tem acesso nos endpoints da API
 
 // Adicionando a compressão ao pipeline da aplicação
 app.UseResponseCompression();

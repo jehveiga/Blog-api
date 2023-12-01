@@ -25,6 +25,7 @@ namespace Blog.Extensions
             Configuration.Smtp = smtp;
         }
 
+        // Método responsável pela maneira de descriptografar o token informado como será lidado na aplicação
         public static void ConfigureAuthentication(this WebApplicationBuilder builder)
         {
             var key = Encoding.ASCII.GetBytes(Configuration.JwtKey); // Obtendo a chave JWT configurada
@@ -40,8 +41,8 @@ namespace Blog.Extensions
                 {
                     ValidateIssuerSigningKey = true, // Validar a chave da assinatura
                     IssuerSigningKey = new SymmetricSecurityKey(key), // Como será validado a chave desta assinatura
-                    ValidateIssuer = false, // Se usar o serviço de multiplas API
-                    ValidateAudience = false, // Se usar o serviço de multiplas API
+                    ValidateIssuer = false, // Se usar o serviço de multiplas API pode ser alterado os valores
+                    ValidateAudience = false, // Se usar o serviço de multiplas API pode ser alterado os valores
                 };
 
             });
