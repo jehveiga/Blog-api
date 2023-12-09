@@ -23,6 +23,14 @@ Mensagem de negócios e afins capturadas para informar o usuário sobre ações 
 
 ![Apresentacao GerarToken](https://github.com/jehveiga/Blog-api/blob/master/assets/gerando_token.png)
 
+# Imagem apresentação - Listar Categorias
+
+![Apresentacao Listar Categorias](https://github.com/jehveiga/Blog-api/blob/master/assets/lista_categorias.png)
+
+# Imagem apresentação - Obter Categoria Por Id
+
+![Apresentacao Categoria por Id](https://github.com/jehveiga/Blog-api/blob/master/assets/obter-categoria-porId.png)
+
 # Tecnologias Utilizadas
 
 ## Back end
