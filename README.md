@@ -19,9 +19,9 @@ Utilizado paginação de dados nos end-points que retorna listagem no result da 
 
 Mensagem de negócios e afins capturadas para informar o usuário sobre ações dentro da aplicação. Utilizando a arquitetura limpa e principios SOLID na prática.
 
-# Apresentação - Gerar Token JWT
+# Imagem apresentação - Gerar Token JWT
 
-![Apresentacao GerarToken]()
+![Apresentacao GerarToken](https://github.com/jehveiga/Blog-api/blob/master/assets/gerando_token.png)
 
 # Tecnologias Utilizadas
 
