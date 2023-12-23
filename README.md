@@ -24,6 +24,10 @@ Mensagem de negócios e afins capturadas para informar o usuário sobre ações 
 ## Métodos Get, GetById, Post, Put e Delete
 ![Apresentacao GerarSenha](https://github.com/jehveiga/Blog-api/blob/master/assets/apresentacao-end-point.gif)
 
+# Apresentação - Gerar Token (Autenticação e Autorização)
+
+![Apresentacao GerarToken](https://github.com/jehveiga/Blog-api/blob/master/assets/apresentacao-gerar-token.gif)
+
 # Apresentação - Gerar Senha
 
 ![Apresentacao GerarSenha](https://github.com/jehveiga/Blog-api/blob/master/assets/gerar-password.gif)
