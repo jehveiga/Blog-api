@@ -58,6 +58,7 @@ Mensagem de negócios e afins capturadas para informar o usuário sobre ações 
 - Authentication JwtBearer
 - AspNetCore OpenApi
 - Secure Identity
+- Entity Framework Core
 
 ## Banco de Dados
 
